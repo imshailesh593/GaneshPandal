@@ -7,6 +7,7 @@ use App\Filament\Resources\AartiBookingResource\Pages;
 use App\Models\AartiBooking;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -27,7 +28,8 @@ class AartiBookingResource extends Resource
             ->schema([
                 Forms\Components\Select::make('status')
                     ->options([
-                        'booked' => 'Booked',
+                        'pending' => 'Pending confirmation',
+                        'confirmed' => 'Confirmed',
                         'cancelled' => 'Cancelled',
                     ])
                     ->required(),
@@ -54,7 +56,8 @@ class AartiBookingResource extends Resource
                     ->searchable(),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
-                        'success' => 'booked',
+                        'warning' => 'pending',
+                        'success' => 'confirmed',
                         'danger' => 'cancelled',
                     ]),
                 Tables\Columns\TextColumn::make('created_at')
@@ -65,7 +68,8 @@ class AartiBookingResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
-                        'booked' => 'Booked',
+                        'pending' => 'Pending confirmation',
+                        'confirmed' => 'Confirmed',
                         'cancelled' => 'Cancelled',
                     ]),
             ])
@@ -74,6 +78,29 @@ class AartiBookingResource extends Resource
                     ->exporter(AartiBookingExporter::class),
             ])
             ->actions([
+                Tables\Actions\Action::make('confirm')
+                    ->label('Confirm')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->visible(fn (AartiBooking $record) => $record->status === 'pending')
+                    ->requiresConfirmation()
+                    ->action(function (AartiBooking $record) {
+                        $record->update(['status' => 'confirmed']);
+
+                        Notification::make()->title('Booking confirmed.')->success()->send();
+                    }),
+                Tables\Actions\Action::make('reject')
+                    ->label('Reject')
+                    ->icon('heroicon-o-x-circle')
+                    ->color('danger')
+                    ->visible(fn (AartiBooking $record) => $record->status === 'pending')
+                    ->requiresConfirmation()
+                    ->modalDescription('This frees the date up for other families to book.')
+                    ->action(function (AartiBooking $record) {
+                        $record->update(['status' => 'cancelled']);
+
+                        Notification::make()->title('Booking rejected — the date is open again.')->success()->send();
+                    }),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

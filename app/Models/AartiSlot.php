@@ -31,7 +31,7 @@ class AartiSlot extends Model
 
     public function activeBooking(): HasOne
     {
-        return $this->hasOne(AartiBooking::class)->where('status', 'booked');
+        return $this->hasOne(AartiBooking::class)->whereIn('status', ['pending', 'confirmed']);
     }
 
     public function isBooked(): bool

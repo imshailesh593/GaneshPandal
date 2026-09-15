@@ -25,7 +25,14 @@
 
         @if ($myActiveBooking)
             <div class="rounded-xl border border-gold-300 bg-white p-4 shadow-sm">
-                <p class="text-sm text-maroon-900/50">तुमच्या कुटुंबाची पुढची आरती</p>
+                <div class="flex items-center justify-between">
+                    <p class="text-sm text-maroon-900/50">तुमच्या कुटुंबाची पुढची आरती</p>
+                    @if ($myActiveBooking->status === 'pending')
+                        <span class="rounded-full bg-marigold-500/15 px-2 py-0.5 text-xs font-medium text-vermillion-700">कन्फर्मेशन बाकी</span>
+                    @else
+                        <span class="rounded-full bg-emerald-700/10 px-2 py-0.5 text-xs font-medium text-emerald-700">कन्फर्म झालं</span>
+                    @endif
+                </div>
                 <p class="text-lg font-semibold text-maroon-950">
                     {{ $myActiveBooking->aartiSlot->date->format('l, j F Y') }}
                 </p>
@@ -51,7 +58,12 @@
                         <p class="font-medium text-maroon-950">{{ $slot->date->format('D, j M Y') }}</p>
                         @if ($booking)
                             <p class="text-sm text-maroon-900/50">
-                                {{ $isMine ? 'तुमच्या कुटुंबाने बुक केलं' : $booking->member->family->name . ' कुटुंबाने बुक केलं' }}
+                                @if ($isMine)
+                                    तुमच्या कुटुंबाने बुक केलं
+                                    {{ $booking->status === 'pending' ? '(कन्फर्मेशन बाकी)' : '(कन्फर्म झालं)' }}
+                                @else
+                                    {{ $booking->member->family->name }} कुटुंबाने बुक केलं
+                                @endif
                             </p>
                         @elseif ($isPast)
                             <p class="text-sm text-maroon-900/30">संपली</p>

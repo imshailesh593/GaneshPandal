@@ -29,7 +29,7 @@ class AartiBookingBoard extends Component
 
         $myActiveBooking = AartiBooking::with('aartiSlot')
             ->whereIn('member_id', $familyMemberIds)
-            ->where('status', 'booked')
+            ->whereIn('status', ['pending', 'confirmed'])
             ->whereHas('aartiSlot', fn ($q) => $q->where('date', '>=', now()->toDateString()))
             ->first();
 
@@ -47,7 +47,7 @@ class AartiBookingBoard extends Component
         $familyMemberIds = Member::where('family_id', $member->family_id)->pluck('id');
 
         $hasActiveBooking = AartiBooking::whereIn('member_id', $familyMemberIds)
-            ->where('status', 'booked')
+            ->whereIn('status', ['pending', 'confirmed'])
             ->whereHas('aartiSlot', fn ($q) => $q->where('date', '>=', now()->toDateString()))
             ->exists();
 
@@ -68,7 +68,7 @@ class AartiBookingBoard extends Component
                 }
 
                 $slotTaken = AartiBooking::where('aarti_slot_id', $slot->id)
-                    ->where('status', 'booked')
+                    ->whereIn('status', ['pending', 'confirmed'])
                     ->lockForUpdate()
                     ->exists();
 
@@ -79,7 +79,7 @@ class AartiBookingBoard extends Component
                 }
 
                 $familyStillFree = ! AartiBooking::whereIn('member_id', $familyMemberIds)
-                    ->where('status', 'booked')
+                    ->whereIn('status', ['pending', 'confirmed'])
                     ->whereHas('aartiSlot', fn ($q) => $q->where('date', '>=', now()->toDateString()))
                     ->lockForUpdate()
                     ->exists();
@@ -93,10 +93,10 @@ class AartiBookingBoard extends Component
                 AartiBooking::create([
                     'member_id' => $member->id,
                     'aarti_slot_id' => $slot->id,
-                    'status' => 'booked',
+                    'status' => 'pending',
                 ]);
 
-                session()->flash('success', 'आरती स्लॉट '.$slot->date->format('D, j M Y').' साठी बुक झाला! तिकडे भेटूया.');
+                session()->flash('success', 'आरती स्लॉट '.$slot->date->format('D, j M Y').' साठी विनंती केली! अ‍ॅडमिन कन्फर्मेशनची वाट आहे.');
             });
         } catch (UniqueConstraintViolationException) {
             session()->flash('error', 'ही तारीख आत्ताच दुसऱ्या कोणी बुक केली. दुसरी तारीख निवडा.');
@@ -112,7 +112,7 @@ class AartiBookingBoard extends Component
             $booking = AartiBooking::with('aartiSlot')
                 ->whereKey($bookingId)
                 ->whereIn('member_id', $familyMemberIds)
-                ->where('status', 'booked')
+                ->whereIn('status', ['pending', 'confirmed'])
                 ->lockForUpdate()
                 ->first();
 
