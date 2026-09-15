@@ -4,8 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\ServiceProvider;
-use Kreait\Firebase\Auth as FirebaseAuth;
-use Kreait\Firebase\Factory;
+use Kreait\Firebase\JWT\IdTokenVerifier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,19 +13,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(FirebaseAuth::class, function () {
-            $factory = new Factory;
-
-            if ($credentials = config('services.firebase.credentials')) {
-                $factory = $factory->withServiceAccount($credentials);
-            }
-
-            if ($projectId = config('services.firebase.project_id')) {
-                $factory = $factory->withProjectId($projectId);
-            }
-
-            return $factory->createAuth();
-        });
+        // Only ID-token verification is needed (mobile OTP login), which only
+        // requires the Firebase project ID — unlike Kreait's full Auth client,
+        // this never needs a service account.
+        $this->app->singleton(IdTokenVerifier::class, fn () => IdTokenVerifier::createWithProjectId(
+            config('services.firebase.project_id')
+        ));
     }
 
     /**

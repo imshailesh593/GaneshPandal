@@ -7,8 +7,8 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Kreait\Firebase\Auth as FirebaseAuth;
-use Kreait\Firebase\Exception\Auth\FailedToVerifyToken;
+use Kreait\Firebase\JWT\Error\IdTokenVerificationFailed;
+use Kreait\Firebase\JWT\IdTokenVerifier;
 
 class AuthController extends Controller
 {
@@ -21,22 +21,23 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function verifyToken(Request $request, FirebaseAuth $firebaseAuth)
+    public function verifyToken(Request $request, IdTokenVerifier $idTokenVerifier)
     {
         $request->validate([
             'id_token' => ['required', 'string'],
         ]);
 
         try {
-            $verifiedToken = $firebaseAuth->verifyIdToken($request->input('id_token'));
-        } catch (FailedToVerifyToken $e) {
+            $verifiedToken = $idTokenVerifier->verifyIdToken($request->input('id_token'));
+        } catch (IdTokenVerificationFailed $e) {
             throw ValidationException::withMessages([
                 'id_token' => 'OTP सेशन व्हेरिफाय होऊ शकलं नाही. परत ट्राय करा.',
             ]);
         }
 
-        $firebaseUid = $verifiedToken->claims()->get('sub');
-        $phoneNumber = $verifiedToken->claims()->get('phone_number');
+        $payload = $verifiedToken->payload();
+        $firebaseUid = $payload['sub'] ?? null;
+        $phoneNumber = $payload['phone_number'] ?? null;
 
         if (! $phoneNumber) {
             throw ValidationException::withMessages([
