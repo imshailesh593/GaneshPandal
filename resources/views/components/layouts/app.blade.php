@@ -1,3 +1,4 @@
+@props(['title' => null, 'wide' => false])
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,8 +11,8 @@
 </head>
 <body class="min-h-screen bg-orange-50 font-sans text-slate-800 antialiased">
     <header class="bg-orange-600 text-white shadow-sm">
-        <div class="mx-auto flex max-w-lg items-center justify-between px-4 py-3">
-            <a href="{{ auth('member')->check() ? route('dashboard') : url('/') }}" class="text-base font-semibold leading-tight">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+            <a href="{{ auth('member')->check() ? route('dashboard') : route('home') }}" class="text-base font-semibold leading-tight">
                 Shakuntal Nagar<br class="sm:hidden">
                 Ganeshotsav Tarun Mandal
             </a>
@@ -26,7 +27,7 @@
         </div>
     </header>
 
-    <main class="mx-auto max-w-lg px-4 py-6">
+    <main class="{{ $wide ? '' : 'mx-auto max-w-lg px-4 py-6' }}">
         {{ $slot }}
     </main>
 
