@@ -31,7 +31,7 @@ class AuthController extends Controller
             $verifiedToken = $firebaseAuth->verifyIdToken($request->input('id_token'));
         } catch (FailedToVerifyToken $e) {
             throw ValidationException::withMessages([
-                'id_token' => 'We could not verify that OTP session. Please try again.',
+                'id_token' => 'OTP सेशन व्हेरिफाय होऊ शकलं नाही. परत ट्राय करा.',
             ]);
         }
 
@@ -40,7 +40,7 @@ class AuthController extends Controller
 
         if (! $phoneNumber) {
             throw ValidationException::withMessages([
-                'id_token' => 'No phone number was found on the verified token.',
+                'id_token' => 'फोन नंबर सापडला नाही. परत ट्राय करा.',
             ]);
         }
 
@@ -89,6 +89,9 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'family_name' => ['required', 'string', 'max:255'],
+        ], [
+            'name.required' => 'तुमचं नाव टाका.',
+            'family_name.required' => 'कुटुंब / घराचं नाव टाका.',
         ]);
 
         $family = Family::query()

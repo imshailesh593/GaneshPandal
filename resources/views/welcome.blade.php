@@ -10,25 +10,25 @@
 
         <div class="relative mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:py-20 lg:grid-cols-2">
             <div class="text-center lg:text-left">
-                <p class="text-sm font-semibold uppercase tracking-widest text-amber-100">Ganeshotsav {{ $festival?->year ?? now()->year }}</p>
+                <p class="text-sm font-semibold uppercase tracking-widest text-amber-100">गणेशोत्सव {{ $festival?->year ?? now()->year }}</p>
                 <h1 class="mt-2 text-3xl font-bold leading-tight sm:text-5xl">Shakuntal Nagar<br>Ganeshotsav Tarun Mandal</h1>
                 <p class="mx-auto mt-4 max-w-xl text-orange-50 lg:mx-0">
-                    Ganpati Bappa Morya! Join our colony in celebrating devotion, culture and community
-                    &mdash; every evening aarti, games, mahaprasad and more, all festival long.
+                    गणपती बाप्पा मोरया! चला, या उत्सवात सहभागी व्हा &mdash; रोज संध्याकाळी आरती,
+                    खेळ-स्पर्धा, महाप्रसाद आणि बरंच काही, संपूर्ण गणेशोत्सव भर!
                 </p>
 
                 @if ($festival)
                     <div class="mx-auto mt-8 flex max-w-2xl flex-wrap items-stretch justify-center gap-3 lg:mx-0 lg:justify-start">
                         <div class="min-w-[9rem] flex-1 rounded-xl bg-white/15 px-4 py-3 backdrop-blur-sm">
-                            <p class="text-xs uppercase tracking-wide text-amber-100">Sthapana</p>
+                            <p class="text-xs uppercase tracking-wide text-amber-100">स्थापना</p>
                             <p class="mt-1 font-semibold">{{ $festival->sthapana_date->format('D, j M Y') }}</p>
                         </div>
                         <div class="min-w-[9rem] flex-1 rounded-xl bg-white/15 px-4 py-3 backdrop-blur-sm">
-                            <p class="text-xs uppercase tracking-wide text-amber-100">Daily Aarti</p>
+                            <p class="text-xs uppercase tracking-wide text-amber-100">रोजची आरती</p>
                             <p class="mt-1 font-semibold">{{ \Illuminate\Support\Carbon::parse($festival->aarti_time)->format('g:i A') }}</p>
                         </div>
                         <div class="min-w-[9rem] flex-1 rounded-xl bg-white/15 px-4 py-3 backdrop-blur-sm">
-                            <p class="text-xs uppercase tracking-wide text-amber-100">Visarjan</p>
+                            <p class="text-xs uppercase tracking-wide text-amber-100">विसर्जन</p>
                             <p class="mt-1 font-semibold">{{ $festival->visarjan_date->format('D, j M Y') }}</p>
                         </div>
                     </div>
@@ -36,25 +36,25 @@
 
                 <div class="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
                     <a href="{{ route('login') }}" class="rounded-md bg-white px-5 py-3 font-medium text-orange-700 shadow-sm hover:bg-orange-50">
-                    Book Aarti Slot
-                </a>
-                <a href="{{ route('login') }}" class="rounded-md bg-orange-800/40 px-5 py-3 font-medium text-white ring-1 ring-inset ring-white/40 hover:bg-orange-800/60">
-                    Volunteer for Mahaprasad
-                </a>
+                        आरती स्लॉट बुक करा
+                    </a>
+                    <a href="{{ route('login') }}" class="rounded-md bg-orange-800/40 px-5 py-3 font-medium text-white ring-1 ring-inset ring-white/40 hover:bg-orange-800/60">
+                        महाप्रसादासाठी व्हॉलंटियर करा
+                    </a>
                 </div>
 
                 <nav class="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-orange-50 lg:justify-start">
-                    <a href="#schedule" class="hover:text-white hover:underline">Schedule</a>
-                    <a href="#mahaprasad" class="hover:text-white hover:underline">Mahaprasad</a>
-                    <a href="#gallery" class="hover:text-white hover:underline">Gallery</a>
-                    <a href="#winners" class="hover:text-white hover:underline">Winners</a>
+                    <a href="#schedule" class="hover:text-white hover:underline">कार्यक्रम</a>
+                    <a href="#mahaprasad" class="hover:text-white hover:underline">महाप्रसाद</a>
+                    <a href="#gallery" class="hover:text-white hover:underline">फोटो गॅलरी</a>
+                    <a href="#winners" class="hover:text-white hover:underline">विजेते</a>
                 </nav>
             </div>
 
             @if ($heroPhoto)
                 <div class="relative mx-auto w-full max-w-md">
                     <div class="overflow-hidden rounded-2xl shadow-2xl ring-4 ring-white/20">
-                        <img src="{{ $heroPhoto->url() }}" alt="{{ $heroPhoto->caption ?? 'Shri Ganesh' }}" class="aspect-[4/5] w-full object-cover">
+                        <img src="{{ $heroPhoto->url() }}" alt="{{ $heroPhoto->caption ?? 'श्री गणेश' }}" class="aspect-[4/5] w-full object-cover">
                     </div>
                 </div>
             @endif
@@ -63,37 +63,37 @@
 
     {{-- About --}}
     <section class="mx-auto max-w-3xl px-4 py-12 text-center">
-        <h2 class="text-2xl font-bold text-slate-900">Our Mandal</h2>
+        <h2 class="text-2xl font-bold text-slate-900">आमचं मंडळ</h2>
         <p class="mt-3 text-slate-600">
-            Shakuntal Nagar Ganeshotsav Tarun Mandal brings our colony together every year to celebrate
-            Ganeshotsav with daily aarti, cultural competitions and community mahaprasad &mdash; open to
-            everyone in the neighbourhood, members and guests alike.
+            शकुंतल नगर गणेशोत्सव तरुण मंडळ आपल्या कॉलनीला दरवर्षी एकत्र आणतं &mdash; गणेशोत्सव साजरा
+            करण्यासाठी, रोजची आरती, सांस्कृतिक स्पर्धा आणि महाप्रसादासह. हे सगळ्यांसाठी खुलं आहे
+            &mdash; मेंबर्स आणि पाहुणे, सगळ्यांचं स्वागत आहे!
         </p>
     </section>
 
     {{-- Schedule --}}
     <section id="schedule" class="bg-white py-12">
         <div class="mx-auto max-w-4xl px-4">
-            <h2 class="text-center text-2xl font-bold text-slate-900">Events Schedule</h2>
+            <h2 class="text-center text-2xl font-bold text-slate-900">उत्सव कार्यक्रम</h2>
 
             <div class="mt-6 rounded-xl bg-orange-50 p-4 text-center">
                 <p class="font-medium text-orange-800">
-                    Daily Aarti &mdash; every evening at
-                    {{ $festival ? \Illuminate\Support\Carbon::parse($festival->aarti_time)->format('g:i A') : '8:30 PM' }}
+                    रोजची आरती &mdash; रोज संध्याकाळी
+                    {{ $festival ? \Illuminate\Support\Carbon::parse($festival->aarti_time)->format('g:i A') : '8:30 PM' }} ला
                 </p>
             </div>
 
             <div class="mt-6 overflow-x-auto">
                 @if ($games->isEmpty())
-                    <p class="py-6 text-center text-slate-500">Games &amp; competitions schedule will be published soon.</p>
+                    <p class="py-6 text-center text-slate-500">खेळ-स्पर्धांचा कार्यक्रम लवकरच जाहीर होईल &mdash; थोडं थांबा!</p>
                 @else
                     <table class="w-full min-w-[36rem] text-left text-sm">
                         <thead>
                             <tr class="border-b border-slate-200 text-slate-500">
-                                <th class="py-2 pr-4 font-medium">Date</th>
-                                <th class="py-2 pr-4 font-medium">Time</th>
-                                <th class="py-2 pr-4 font-medium">Game / Competition</th>
-                                <th class="py-2 pr-4 font-medium">Venue</th>
+                                <th class="py-2 pr-4 font-medium">तारीख</th>
+                                <th class="py-2 pr-4 font-medium">वेळ</th>
+                                <th class="py-2 pr-4 font-medium">खेळ / स्पर्धा</th>
+                                <th class="py-2 pr-4 font-medium">ठिकाण</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -120,16 +120,16 @@
     {{-- Mahaprasad --}}
     <section id="mahaprasad" class="bg-orange-50/60 py-12">
         <div class="mx-auto max-w-4xl px-4">
-            <h2 class="text-center text-2xl font-bold text-slate-900">Mahaprasad Sponsors</h2>
+            <h2 class="text-center text-2xl font-bold text-slate-900">महाप्रसाद प्रायोजक</h2>
             <p class="mx-auto mt-2 max-w-xl text-center text-slate-600">
-                One family sponsors mahaprasad each day. Here's who's serving prasad this festival.
+                रोज एक कुटुंब महाप्रसाद प्रायोजित करतं. या उत्सवात कोण कधी प्रसाद देणार, ते इथे बघा.
             </p>
 
             @if ($mahaprasadSlots->isEmpty())
                 <div class="mx-auto mt-6 max-w-md rounded-xl bg-white p-6 text-center shadow-sm">
-                    <p class="text-slate-500">No mahaprasad sponsors confirmed yet &mdash; every day is still open!</p>
+                    <p class="text-slate-500">अजून कोणी महाप्रसाद प्रायोजित केला नाही &mdash; सगळे दिवस अजून खुले आहेत!</p>
                     <a href="{{ route('login') }}" class="mt-4 inline-block rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700">
-                        Volunteer for a day
+                        एक दिवस व्हॉलंटियर करा
                     </a>
                 </div>
             @else
@@ -139,7 +139,7 @@
                             <p class="font-semibold text-slate-900">{{ $slot->date->format('D, j M Y') }}</p>
                             <p class="mt-1 text-sm text-slate-600">{{ $slot->description }}</p>
                             @if ($slot->submitter)
-                                <p class="mt-2 text-xs uppercase tracking-wide text-orange-600">Sponsored by {{ $slot->submitter->name }}</p>
+                                <p class="mt-2 text-xs uppercase tracking-wide text-orange-600">प्रायोजक: {{ $slot->submitter->name }}</p>
                             @endif
                         </div>
                     @endforeach
@@ -151,22 +151,22 @@
     {{-- Gallery --}}
     <section id="gallery" class="bg-white py-12">
         <div class="mx-auto max-w-5xl px-4">
-            <h2 class="text-center text-2xl font-bold text-slate-900">Gallery</h2>
+            <h2 class="text-center text-2xl font-bold text-slate-900">फोटो गॅलरी</h2>
 
             @if ($photos->isEmpty())
                 <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
                     @for ($i = 0; $i < 4; $i++)
                         <div class="flex aspect-square items-center justify-center rounded-xl bg-gradient-to-br from-orange-100 to-amber-100 text-center text-xs text-orange-400">
-                            Photos coming soon
+                            फोटो लवकरच येणार
                         </div>
                     @endfor
                 </div>
-                <p class="mt-4 text-center text-sm text-slate-500">Decoration and event photos will be added here during the festival.</p>
+                <p class="mt-4 text-center text-sm text-slate-500">डेकोरेशन आणि कार्यक्रमांचे फोटो उत्सव चालू असताना इथे अपडेट होतील.</p>
             @else
                 <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                     @foreach ($photos as $photo)
                         <figure class="group relative aspect-square overflow-hidden rounded-xl bg-slate-100">
-                            <img src="{{ $photo->url() }}" alt="{{ $photo->caption ?? 'Ganeshotsav photo' }}" class="h-full w-full object-cover">
+                            <img src="{{ $photo->url() }}" alt="{{ $photo->caption ?? 'गणेशोत्सव फोटो' }}" class="h-full w-full object-cover">
                             @if ($photo->caption)
                                 <figcaption class="absolute inset-x-0 bottom-0 bg-black/50 px-2 py-1 text-xs text-white opacity-0 transition group-hover:opacity-100">
                                     {{ $photo->caption }}
@@ -182,10 +182,10 @@
     {{-- Winners --}}
     <section id="winners" class="bg-orange-50/60 py-12">
         <div class="mx-auto max-w-4xl px-4">
-            <h2 class="text-center text-2xl font-bold text-slate-900">Winners</h2>
+            <h2 class="text-center text-2xl font-bold text-slate-900">विजेते</h2>
 
             @if ($winners->isEmpty())
-                <p class="mt-6 text-center text-slate-500">Winners will be announced here after each event.</p>
+                <p class="mt-6 text-center text-slate-500">प्रत्येक स्पर्धेनंतर विजेत्यांची नावं इथे जाहीर होतील.</p>
             @else
                 <div class="mt-6 space-y-4">
                     @foreach ($winners as $game)
@@ -202,10 +202,10 @@
                                                 default => 'bg-green-100 text-green-700',
                                             } }}">
                                             {{ match ($participant->position) {
-                                                'first' => '1st place',
-                                                'second' => '2nd place',
-                                                'third' => '3rd place',
-                                                default => 'Participant',
+                                                'first' => 'पहिला नंबर',
+                                                'second' => 'दुसरा नंबर',
+                                                'third' => 'तिसरा नंबर',
+                                                default => 'सहभागी',
                                             } }}
                                         </span>
                                         <span class="text-slate-700">{{ $participant->displayName() }}</span>
@@ -221,10 +221,10 @@
 
     {{-- Footer CTA --}}
     <section class="bg-orange-600 py-10 text-center text-white">
-        <h2 class="text-xl font-semibold">Be part of the celebration</h2>
-        <p class="mt-2 text-orange-50">Log in with your mobile number to book an aarti slot or sponsor mahaprasad.</p>
+        <h2 class="text-xl font-semibold">या, उत्सवात सहभागी व्हा</h2>
+        <p class="mt-2 text-orange-50">तुमचा मोबाईल नंबर टाकून आरती स्लॉट बुक करा किंवा महाप्रसाद प्रायोजित करा.</p>
         <a href="{{ route('login') }}" class="mt-5 inline-block rounded-md bg-white px-5 py-3 font-medium text-orange-700 hover:bg-orange-50">
-            Member Login
+            मेंबर लॉगिन
         </a>
     </section>
 

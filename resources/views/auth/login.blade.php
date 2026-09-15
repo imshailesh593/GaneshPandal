@@ -1,12 +1,12 @@
 <x-layouts.app title="Login">
     <div class="rounded-xl bg-white p-6 shadow-sm">
-        <h1 class="text-xl font-semibold text-slate-900">Member Login</h1>
-        <p class="mt-1 text-sm text-slate-500">Enter your mobile number to book an aarti slot or volunteer for mahaprasad.</p>
+        <h1 class="text-xl font-semibold text-slate-900">मेंबर लॉगिन</h1>
+        <p class="mt-1 text-sm text-slate-500">तुमचा मोबाईल नंबर टाका, आरती स्लॉट बुक करण्यासाठी किंवा महाप्रसाद व्हॉलंटियर करण्यासाठी.</p>
 
         <div id="auth-error" class="mt-4 hidden rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"></div>
 
         <form id="phone-form" class="mt-4 space-y-3">
-            <label class="block text-sm font-medium text-slate-700" for="mobile">Mobile number</label>
+            <label class="block text-sm font-medium text-slate-700" for="mobile">मोबाईल नंबर</label>
             <div class="flex items-center gap-2">
                 <span class="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-600">+91</span>
                 <input id="mobile" type="tel" inputmode="numeric" maxlength="10" required
@@ -15,21 +15,21 @@
             </div>
             <button type="submit" id="send-otp-btn"
                     class="w-full rounded-md bg-orange-600 px-4 py-2 font-medium text-white hover:bg-orange-700 disabled:opacity-50">
-                Send OTP
+                OTP पाठवा
             </button>
         </form>
 
         <form id="otp-form" class="mt-4 hidden space-y-3">
-            <label class="block text-sm font-medium text-slate-700" for="otp">Enter the 6-digit OTP</label>
+            <label class="block text-sm font-medium text-slate-700" for="otp">6 अंकी OTP टाका</label>
             <input id="otp" type="text" inputmode="numeric" maxlength="6" required
                    placeholder="000000"
                    class="w-full rounded-md border border-slate-300 px-3 py-2 text-center text-lg tracking-widest focus:border-orange-500 focus:outline-none">
             <button type="submit" id="verify-otp-btn"
                     class="w-full rounded-md bg-orange-600 px-4 py-2 font-medium text-white hover:bg-orange-700 disabled:opacity-50">
-                Verify OTP
+                OTP व्हेरिफाय करा
             </button>
             <button type="button" id="change-number-btn" class="w-full text-sm text-slate-500 underline">
-                Change number
+                नंबर बदला
             </button>
         </form>
 
@@ -73,7 +73,7 @@
 
         function setLoading(button, loading, label) {
             button.disabled = loading;
-            button.textContent = loading ? 'Please wait…' : label;
+            button.textContent = loading ? 'थांबा, जरा वेट करा…' : label;
         }
 
         window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
@@ -87,13 +87,13 @@
             const digits = document.getElementById('mobile').value.replace(/\D/g, '');
 
             if (digits.length !== 10) {
-                showError('Enter a valid 10-digit mobile number.');
+                showError('बरोबर 10 अंकी मोबाईल नंबर टाका.');
                 return;
             }
 
             const phoneNumber = `+91${digits}`;
 
-            setLoading(sendBtn, true, 'Send OTP');
+            setLoading(sendBtn, true, 'OTP पाठवा');
 
             try {
                 confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
@@ -101,12 +101,12 @@
                 otpForm.classList.remove('hidden');
             } catch (error) {
                 console.error(error);
-                showError('Could not send OTP. Please check the number and try again.');
+                showError('OTP सेंड झाला नाही. नंबर तपासून परत ट्राय करा.');
                 window.recaptchaVerifier.render().then((widgetId) => {
                     if (window.grecaptcha) window.grecaptcha.reset(widgetId);
                 });
             } finally {
-                setLoading(sendBtn, false, 'Send OTP');
+                setLoading(sendBtn, false, 'OTP पाठवा');
             }
         });
 
@@ -117,11 +117,11 @@
             const otp = document.getElementById('otp').value.trim();
 
             if (!confirmationResult) {
-                showError('Please request a new OTP.');
+                showError('नवीन OTP मागा, कृपया.');
                 return;
             }
 
-            setLoading(verifyBtn, true, 'Verify OTP');
+            setLoading(verifyBtn, true, 'OTP व्हेरिफाय करा');
 
             try {
                 const userCredential = await confirmationResult.confirm(otp);
@@ -140,16 +140,16 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    showError(data.message ?? 'Verification failed. Please try again.');
+                    showError(data.message ?? 'व्हेरिफिकेशन फेल झालं. परत ट्राय करा.');
                     return;
                 }
 
                 window.location.href = data.redirect;
             } catch (error) {
                 console.error(error);
-                showError('That OTP was incorrect or has expired. Please try again.');
+                showError('OTP चुकीचा आहे किंवा एक्सपायर झाला. परत ट्राय करा.');
             } finally {
-                setLoading(verifyBtn, false, 'Verify OTP');
+                setLoading(verifyBtn, false, 'OTP व्हेरिफाय करा');
             }
         });
 

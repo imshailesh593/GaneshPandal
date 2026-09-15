@@ -52,7 +52,7 @@ class AartiBookingBoard extends Component
             ->exists();
 
         if ($hasActiveBooking) {
-            session()->flash('error', 'Your family already has an upcoming aarti booking. Cancel it before booking another date.');
+            session()->flash('error', 'तुमच्या कुटुंबाची आधीच एक आरती बुकिंग आहे. दुसरी तारीख बुक करण्याआधी ती कॅन्सल करा.');
 
             return;
         }
@@ -62,7 +62,7 @@ class AartiBookingBoard extends Component
                 $slot = AartiSlot::whereKey($slotId)->lockForUpdate()->first();
 
                 if (! $slot || ! $slot->is_active || $slot->date->isPast()) {
-                    session()->flash('error', 'That aarti date is not available for booking.');
+                    session()->flash('error', 'ही आरतीची तारीख बुकिंगसाठी उपलब्ध नाही.');
 
                     return;
                 }
@@ -73,7 +73,7 @@ class AartiBookingBoard extends Component
                     ->exists();
 
                 if ($slotTaken) {
-                    session()->flash('error', 'That date was just booked by someone else. Please pick another.');
+                    session()->flash('error', 'ही तारीख आत्ताच दुसऱ्या कोणी बुक केली. दुसरी तारीख निवडा.');
 
                     return;
                 }
@@ -85,7 +85,7 @@ class AartiBookingBoard extends Component
                     ->exists();
 
                 if (! $familyStillFree) {
-                    session()->flash('error', 'Your family already has an upcoming aarti booking. Cancel it before booking another date.');
+                    session()->flash('error', 'तुमच्या कुटुंबाची आधीच एक आरती बुकिंग आहे. दुसरी तारीख बुक करण्याआधी ती कॅन्सल करा.');
 
                     return;
                 }
@@ -96,10 +96,10 @@ class AartiBookingBoard extends Component
                     'status' => 'booked',
                 ]);
 
-                session()->flash('success', 'Aarti slot booked for '.$slot->date->format('D, j M Y').'. See you there!');
+                session()->flash('success', 'आरती स्लॉट '.$slot->date->format('D, j M Y').' साठी बुक झाला! तिकडे भेटूया.');
             });
         } catch (UniqueConstraintViolationException) {
-            session()->flash('error', 'That date was just booked by someone else. Please pick another.');
+            session()->flash('error', 'ही तारीख आत्ताच दुसऱ्या कोणी बुक केली. दुसरी तारीख निवडा.');
         }
     }
 
@@ -117,14 +117,14 @@ class AartiBookingBoard extends Component
                 ->first();
 
             if (! $booking || $booking->aartiSlot->date->isPast()) {
-                session()->flash('error', 'That booking can no longer be cancelled.');
+                session()->flash('error', 'ही बुकिंग आता कॅन्सल करता येणार नाही.');
 
                 return;
             }
 
             $booking->update(['status' => 'cancelled']);
 
-            session()->flash('success', 'Booking cancelled. That date is now open for others.');
+            session()->flash('success', 'बुकिंग कॅन्सल झालं. ही तारीख आता इतरांसाठी खुली आहे.');
         });
     }
 

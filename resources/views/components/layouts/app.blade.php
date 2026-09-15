@@ -20,7 +20,7 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="rounded-md bg-orange-700 px-3 py-1.5 text-sm font-medium hover:bg-orange-800">
-                        Logout
+                        लॉगआउट
                     </button>
                 </form>
             @endauth
