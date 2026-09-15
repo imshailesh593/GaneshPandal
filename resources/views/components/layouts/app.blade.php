@@ -12,9 +12,9 @@
 <body class="min-h-screen bg-ivory-50 font-sans text-maroon-950 antialiased">
     <header class="relative bg-maroon-950 text-ivory-50">
         <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-            <a href="{{ auth('member')->check() ? route('dashboard') : route('home') }}" class="text-sm font-semibold uppercase tracking-wide text-gold-200 sm:text-base">
-                Shakuntal Nagar<br class="sm:hidden">
-                Ganeshotsav Tarun Mandal
+            <a href="{{ auth('member')->check() ? route('dashboard') : route('home') }}" class="font-display text-lg leading-tight text-gold-200 sm:text-xl">
+                शकुंतल नगर<br class="sm:hidden">
+                गणेशोत्सव तरुण मंडळ
             </a>
             @auth('member')
                 <form method="POST" action="{{ route('logout') }}">
