@@ -1,34 +1,35 @@
 <x-layouts.app title="Login">
-    <div class="rounded-xl bg-white p-6 shadow-sm">
-        <h1 class="text-xl font-semibold text-slate-900">मेंबर लॉगिन</h1>
-        <p class="mt-1 text-sm text-slate-500">तुमचा मोबाईल नंबर टाका, आरती स्लॉट बुक करण्यासाठी किंवा महाप्रसाद व्हॉलंटियर करण्यासाठी.</p>
+    <div class="rounded-xl border-t-4 border-gold-300 bg-white p-6 shadow-md">
+        <p class="font-display text-xs uppercase tracking-widest text-vermillion-600">आपले स्वागत आहे</p>
+        <h1 class="font-display mt-1 text-2xl text-maroon-950">मेंबर लॉगिन</h1>
+        <p class="mt-1 text-sm text-maroon-900/60">तुमचा मोबाईल नंबर टाका, आरती स्लॉट बुक करण्यासाठी किंवा महाप्रसाद व्हॉलंटियर करण्यासाठी.</p>
 
         <div id="auth-error" class="mt-4 hidden rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"></div>
 
         <form id="phone-form" class="mt-4 space-y-3">
-            <label class="block text-sm font-medium text-slate-700" for="mobile">मोबाईल नंबर</label>
+            <label class="block text-sm font-medium text-maroon-900/80" for="mobile">मोबाईल नंबर</label>
             <div class="flex items-center gap-2">
-                <span class="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-600">+91</span>
+                <span class="rounded-md bg-ivory-100 px-3 py-2 text-sm text-maroon-900/70">+91</span>
                 <input id="mobile" type="tel" inputmode="numeric" maxlength="10" required
                        placeholder="98765 43210"
-                       class="w-full rounded-md border border-slate-300 px-3 py-2 text-base focus:border-orange-500 focus:outline-none">
+                       class="w-full rounded-md border border-maroon-950/15 px-3 py-2 text-base focus:border-vermillion-600 focus:outline-none">
             </div>
             <button type="submit" id="send-otp-btn"
-                    class="w-full rounded-md bg-orange-600 px-4 py-2 font-medium text-white hover:bg-orange-700 disabled:opacity-50">
+                    class="w-full rounded-md bg-vermillion-600 px-4 py-2 font-semibold text-white hover:bg-vermillion-700 disabled:opacity-50">
                 OTP पाठवा
             </button>
         </form>
 
         <form id="otp-form" class="mt-4 hidden space-y-3">
-            <label class="block text-sm font-medium text-slate-700" for="otp">6 अंकी OTP टाका</label>
+            <label class="block text-sm font-medium text-maroon-900/80" for="otp">6 अंकी OTP टाका</label>
             <input id="otp" type="text" inputmode="numeric" maxlength="6" required
                    placeholder="000000"
-                   class="w-full rounded-md border border-slate-300 px-3 py-2 text-center text-lg tracking-widest focus:border-orange-500 focus:outline-none">
+                   class="w-full rounded-md border border-maroon-950/15 px-3 py-2 text-center text-lg tracking-widest focus:border-vermillion-600 focus:outline-none">
             <button type="submit" id="verify-otp-btn"
-                    class="w-full rounded-md bg-orange-600 px-4 py-2 font-medium text-white hover:bg-orange-700 disabled:opacity-50">
+                    class="w-full rounded-md bg-vermillion-600 px-4 py-2 font-semibold text-white hover:bg-vermillion-700 disabled:opacity-50">
                 OTP व्हेरिफाय करा
             </button>
-            <button type="button" id="change-number-btn" class="w-full text-sm text-slate-500 underline">
+            <button type="button" id="change-number-btn" class="w-full text-sm text-maroon-900/50 underline">
                 नंबर बदला
             </button>
         </form>

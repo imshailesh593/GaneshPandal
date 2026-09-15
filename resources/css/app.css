@@ -4,6 +4,40 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Hind', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Yatra One', 'Hind', ui-sans-serif, system-ui, sans-serif;
+
+    /* Pulled from the mandal's own festival photos: temple-crown gold, kumkum
+       vermillion, marigold garlands, the deep maroon dhoti cloth, cream drapes,
+       and the one green fountain-lit shot. */
+    --color-maroon-950: #2b0b0e;
+    --color-maroon-900: #3d1016;
+    --color-vermillion-600: #c13515;
+    --color-vermillion-700: #a02a10;
+    --color-marigold-500: #e8912b;
+    --color-marigold-400: #f0a83f;
+    --color-gold-300: #e3c077;
+    --color-gold-200: #eed6a3;
+    --color-ivory-50: #fbf3e4;
+    --color-ivory-100: #f6e9d2;
+    --color-emerald-700: #145c43;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes rise-in {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .reveal {
+        animation: rise-in 0.7s ease-out both;
+    }
 }
