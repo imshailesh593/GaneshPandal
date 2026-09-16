@@ -2,7 +2,7 @@
     <div class="rounded-xl border-t-4 border-gold-300 bg-white p-4 shadow-sm">
         <p class="text-sm text-maroon-900/50">लॉगिन आहे</p>
         <p class="font-semibold text-maroon-950">{{ auth('member')->user()->name }}</p>
-        <p class="text-sm text-maroon-900/50">{{ auth('member')->user()->family->name }} कुटुंब</p>
+        <p class="text-sm text-maroon-900/50">प्लॉट {{ auth('member')->user()->family->plot_number }}</p>
     </div>
 
     @if (session('success'))
@@ -62,13 +62,13 @@
                                     तुमच्या कुटुंबाने बुक केलं
                                     {{ $booking->status === 'pending' ? '(कन्फर्मेशन बाकी)' : '(कन्फर्म झालं)' }}
                                 @else
-                                    {{ $booking->member->family->name }} कुटुंबाने बुक केलं
+                                    {{ $booking->bookedByLabel() }} ने बुक केलं
                                 @endif
                             </p>
                         @elseif ($isPast)
                             <p class="text-sm text-maroon-900/30">संपली</p>
                         @elseif (! $slot->is_active)
-                            <p class="text-sm text-maroon-900/30">उपलब्ध नाही</p>
+                            <p class="text-sm text-maroon-900/30">उपलब्ध नाही{{ $slot->note ? ' — '.$slot->note : '' }}</p>
                         @else
                             <p class="text-sm text-emerald-700">उपलब्ध आहे</p>
                         @endif

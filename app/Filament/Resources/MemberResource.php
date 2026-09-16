@@ -23,7 +23,8 @@ class MemberResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('family_id')
-                    ->relationship('family', 'name')
+                    ->label('Plot')
+                    ->relationship('family', 'plot_number')
                     ->searchable()
                     ->preload()
                     ->required(),
@@ -45,7 +46,8 @@ class MemberResource extends Resource
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('family.name')
+                Tables\Columns\TextColumn::make('family.plot_number')
+                    ->label('Plot')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
@@ -62,8 +64,8 @@ class MemberResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('family_id')
-                    ->label('Family')
-                    ->relationship('family', 'name')
+                    ->label('Plot')
+                    ->relationship('family', 'plot_number')
                     ->searchable(),
             ])
             ->actions([

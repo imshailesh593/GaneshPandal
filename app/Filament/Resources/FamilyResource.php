@@ -18,11 +18,14 @@ class FamilyResource extends Resource
 
     protected static ?string $navigationGroup = 'Members';
 
+    protected static ?string $navigationLabel = 'Plots';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('plot_number')
+                    ->label('Plot number')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -32,7 +35,8 @@ class FamilyResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('plot_number')
+                    ->label('Plot number')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('members_count')
                     ->label('Members')

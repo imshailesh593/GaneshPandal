@@ -89,18 +89,18 @@ class AuthController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'family_name' => ['required', 'string', 'max:255'],
+            'plot_number' => ['required', 'string', 'max:255'],
         ], [
             'name.required' => 'तुमचं नाव टाका.',
-            'family_name.required' => 'कुटुंब / घराचं नाव टाका.',
+            'plot_number.required' => 'प्लॉट नंबर टाका.',
         ]);
 
         $family = Family::query()
-            ->whereRaw('LOWER(name) = ?', [mb_strtolower(trim($validated['family_name']))])
+            ->whereRaw('LOWER(plot_number) = ?', [mb_strtolower(trim($validated['plot_number']))])
             ->first();
 
         if (! $family) {
-            $family = Family::create(['name' => trim($validated['family_name'])]);
+            $family = Family::create(['plot_number' => trim($validated['plot_number'])]);
         }
 
         $member = Member::create([

@@ -5,12 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Exports\AartiBookingExporter;
 use App\Filament\Resources\AartiBookingResource\Pages;
 use App\Models\AartiBooking;
+use App\Models\AartiSlot;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class AartiBookingResource extends Resource
 {
@@ -26,12 +28,43 @@ class AartiBookingResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('aarti_slot_id')
+                    ->label('Date')
+                    ->relationship('aartiSlot', 'date', modifyQueryUsing: fn ($query) => $query->orderBy('date'))
+                    ->getOptionLabelFromRecordUsing(fn (AartiSlot $record) => $record->date->format('D, j M Y').($record->is_active ? '' : ' (blocked)'))
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->disabledOn('edit')
+                    ->rules([
+                        fn (?Model $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($record) {
+                            $exists = AartiBooking::where('aarti_slot_id', $value)
+                                ->whereIn('status', ['pending', 'confirmed'])
+                                ->when($record, fn ($query) => $query->whereKeyNot($record->getKey()))
+                                ->exists();
+
+                            if ($exists) {
+                                $fail('This date already has an active booking.');
+                            }
+                        },
+                    ]),
+                Forms\Components\Select::make('member_id')
+                    ->label('Member (optional)')
+                    ->relationship('member', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->helperText('Leave blank and fill in the name below for a guest or the mandal chief.'),
+                Forms\Components\TextInput::make('guest_name')
+                    ->label('Guest / chief name (if not a member)')
+                    ->maxLength(255)
+                    ->requiredWithout('member_id'),
                 Forms\Components\Select::make('status')
                     ->options([
                         'pending' => 'Pending confirmation',
                         'confirmed' => 'Confirmed',
                         'cancelled' => 'Cancelled',
                     ])
+                    ->default('confirmed')
                     ->required(),
             ]);
     }
@@ -45,15 +78,15 @@ class AartiBookingResource extends Resource
                     ->label('Date')
                     ->date('D, j M Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('member.family.name')
-                    ->label('Family')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('member.name')
-                    ->label('Member')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('plot')
+                    ->label('Plot / Guest')
+                    ->getStateUsing(fn (AartiBooking $record) => $record->member?->family?->plot_number ?? $record->guest_name ?? '—'),
+                Tables\Columns\TextColumn::make('booked_for')
+                    ->label('Booked For')
+                    ->getStateUsing(fn (AartiBooking $record) => $record->displayName()),
                 Tables\Columns\TextColumn::make('member.mobile')
                     ->label('Mobile')
-                    ->searchable(),
+                    ->placeholder('—'),
                 Tables\Columns\BadgeColumn::make('status')
                     ->colors([
                         'warning' => 'pending',
@@ -74,6 +107,8 @@ class AartiBookingResource extends Resource
                     ]),
             ])
             ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->label('Book on behalf of someone'),
                 Tables\Actions\ExportAction::make()
                     ->exporter(AartiBookingExporter::class),
             ])
@@ -111,15 +146,11 @@ class AartiBookingResource extends Resource
             ]);
     }
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListAartiBookings::route('/'),
+            'create' => Pages\CreateAartiBooking::route('/create'),
             'edit' => Pages\EditAartiBooking::route('/{record}/edit'),
         ];
     }

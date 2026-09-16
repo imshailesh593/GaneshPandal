@@ -26,10 +26,10 @@
             </div>
 
             <div>
-                <label for="family_name" class="block text-sm font-medium text-maroon-900/80">कुटुंब / घराचं नाव</label>
-                <p class="text-xs text-maroon-900/50">उदा. तुमचा घर नंबर किंवा आडनाव. एका कुटुंबातल्या सगळ्यांची
+                <label for="plot_number" class="block text-sm font-medium text-maroon-900/80">प्लॉट नंबर</label>
+                <p class="text-xs text-maroon-900/50">तुमच्या घराचा / प्लॉटचा नंबर. एका प्लॉटवरच्या सगळ्यांची
                     आरती बुकिंग एकच असते.</p>
-                <input id="family_name" name="family_name" type="text" required value="{{ old('family_name') }}"
+                <input id="plot_number" name="plot_number" type="text" required value="{{ old('plot_number') }}"
                        class="mt-1 w-full rounded-md border border-maroon-950/15 px-3 py-2 text-base focus:border-vermillion-600 focus:outline-none">
             </div>
 

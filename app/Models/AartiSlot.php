@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['festival_id', 'date', 'time', 'is_active'])]
+#[Fillable(['festival_id', 'date', 'time', 'is_active', 'note'])]
 class AartiSlot extends Model
 {
     protected function casts(): array

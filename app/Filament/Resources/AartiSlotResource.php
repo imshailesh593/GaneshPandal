@@ -6,6 +6,7 @@ use App\Filament\Resources\AartiSlotResource\Pages;
 use App\Models\AartiSlot;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -34,6 +35,10 @@ class AartiSlotResource extends Resource
                 Forms\Components\Toggle::make('is_active')
                     ->helperText('Turn off to hide this date from booking without deleting it.')
                     ->required(),
+                Forms\Components\Textarea::make('note')
+                    ->label('Note (shown to members when blocked)')
+                    ->helperText('E.g. "Pooja rescheduled" or "Reserved for the mandal committee".')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -49,12 +54,16 @@ class AartiSlotResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('time')
                     ->time('g:i A'),
-                Tables\Columns\TextColumn::make('activeBooking.member.family.name')
+                Tables\Columns\TextColumn::make('booked_by')
                     ->label('Booked By')
+                    ->getStateUsing(fn (AartiSlot $record) => $record->activeBooking?->bookedByLabel())
                     ->placeholder('— available —'),
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Active')
                     ->boolean(),
+                Tables\Columns\TextColumn::make('note')
+                    ->limit(30)
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('festival_id')
@@ -71,6 +80,34 @@ class AartiSlotResource extends Resource
                     ),
             ])
             ->actions([
+                Tables\Actions\Action::make('block')
+                    ->label('Block')
+                    ->icon('heroicon-o-no-symbol')
+                    ->color('danger')
+                    ->visible(fn (AartiSlot $record) => $record->is_active)
+                    ->requiresConfirmation()
+                    ->modalDescription('Members will no longer be able to book this date. Any existing booking on it is not affected — cancel it separately from Aarti Bookings if needed.')
+                    ->form([
+                        Forms\Components\Textarea::make('note')
+                            ->label('Reason (shown to members)')
+                            ->required(),
+                    ])
+                    ->action(function (AartiSlot $record, array $data) {
+                        $record->update(['is_active' => false, 'note' => $data['note']]);
+
+                        Notification::make()->title('Date blocked.')->success()->send();
+                    }),
+                Tables\Actions\Action::make('unblock')
+                    ->label('Unblock')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->visible(fn (AartiSlot $record) => ! $record->is_active)
+                    ->requiresConfirmation()
+                    ->action(function (AartiSlot $record) {
+                        $record->update(['is_active' => true, 'note' => null]);
+
+                        Notification::make()->title('Date unblocked.')->success()->send();
+                    }),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

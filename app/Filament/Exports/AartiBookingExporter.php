@@ -16,10 +16,12 @@ class AartiBookingExporter extends Exporter
         return [
             ExportColumn::make('aartiSlot.date')
                 ->label('Date'),
-            ExportColumn::make('member.family.name')
-                ->label('Family'),
+            ExportColumn::make('member.family.plot_number')
+                ->label('Plot'),
             ExportColumn::make('member.name')
                 ->label('Member'),
+            ExportColumn::make('guest_name')
+                ->label('Guest / Chief'),
             ExportColumn::make('member.mobile')
                 ->label('Mobile'),
             ExportColumn::make('status')
