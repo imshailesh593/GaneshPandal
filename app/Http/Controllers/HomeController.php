@@ -26,7 +26,10 @@ class HomeController extends Controller
 
         $winners = Game::query()
             ->whereHas('participants')
-            ->with(['participants' => fn ($q) => $q->with('member')->orderByRaw("FIELD(position, 'first', 'second', 'third', 'participation')")])
+            ->with(['participants' => fn ($q) => $q->with('member')
+                ->orderByRaw("FIELD(age_group, 'small', 'medium', 'large')")
+                ->orderByRaw("FIELD(gender, 'male', 'female')")
+                ->orderByRaw("FIELD(position, 'first', 'second', 'third')")])
             ->orderByDesc('date')
             ->get();
 

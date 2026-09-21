@@ -2,62 +2,124 @@
 
 namespace App\Filament\Resources\GameResource\RelationManagers;
 
+use App\Enums\AgeGroup;
+use App\Enums\Gender;
+use App\Enums\Position;
+use App\Models\GameParticipant;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rules\Unique;
 
 class ParticipantsRelationManager extends RelationManager
 {
     protected static string $relationship = 'participants';
 
+    protected static ?string $title = 'Winners';
+
+    protected static ?string $modelLabel = 'winner';
+
+    protected static ?string $pluralModelLabel = 'winners';
+
+    protected static ?string $recordTitleAttribute = 'participant_name';
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
+                Forms\Components\Select::make('age_group')
+                    ->label('Group')
+                    ->options(AgeGroup::class)
+                    ->required()
+                    ->live(),
+                Forms\Components\Select::make('gender')
+                    ->options(Gender::class)
+                    ->required()
+                    ->live(),
+                Forms\Components\Select::make('position')
+                    ->label('Rank')
+                    ->options(Position::class)
+                    ->required()
+                    ->unique(
+                        ignoreRecord: true,
+                        modifyRuleUsing: fn (Unique $rule, Get $get) => $rule
+                            ->where('game_id', $this->getOwnerRecord()->getKey())
+                            ->where('age_group', $get('age_group'))
+                            ->where('gender', $get('gender')),
+                    )
+                    ->validationMessages(['unique' => 'That rank already has a winner in this group and gender.']),
                 Forms\Components\Select::make('member_id')
                     ->label('Member (optional)')
                     ->relationship('member', 'name')
                     ->searchable()
                     ->preload()
-                    ->helperText('Leave blank and use the name field below for a non-member participant.'),
+                    ->helperText('Leave blank and type the name below for someone who is not a registered member.'),
                 Forms\Components\TextInput::make('participant_name')
                     ->label('Name (if not a member)')
-                    ->maxLength(255),
-                Forms\Components\Select::make('position')
-                    ->options([
-                        'first' => '1st place',
-                        'second' => '2nd place',
-                        'third' => '3rd place',
-                        'participation' => 'Participation',
-                    ])
-                    ->required(),
+                    ->maxLength(255)
+                    ->requiredWithout('member_id')
+                    ->helperText('This name is printed on the certificate.'),
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('participant_name')
+            ->modifyQueryUsing(fn (Builder $query) => $query
+                ->orderByRaw("FIELD(age_group, 'small', 'medium', 'large')")
+                ->orderByRaw("FIELD(gender, 'male', 'female')")
+                ->orderByRaw("FIELD(position, 'first', 'second', 'third')"))
+            ->paginated(false)
             ->columns([
-                Tables\Columns\TextColumn::make('member.name')
-                    ->label('Name')
-                    ->getStateUsing(fn ($record) => $record->displayName()),
-                Tables\Columns\BadgeColumn::make('position')
-                    ->color(fn (string $state): string => match ($state) {
-                        'first' => 'warning',
-                        'second', 'third' => 'gray',
-                        default => 'success',
+                Tables\Columns\TextColumn::make('age_group')
+                    ->label('Group')
+                    ->badge()
+                    ->color('gray'),
+                Tables\Columns\TextColumn::make('gender')
+                    ->badge()
+                    ->color('gray'),
+                Tables\Columns\TextColumn::make('position')
+                    ->label('Rank')
+                    ->badge()
+                    ->color(fn (Position $state): string => match ($state) {
+                        Position::First => 'warning',
+                        Position::Second => 'gray',
+                        Position::Third => 'danger',
                     }),
+                Tables\Columns\TextColumn::make('winner')
+                    ->label('Winner')
+                    ->getStateUsing(fn (GameParticipant $record) => $record->displayName()),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('age_group')
+                    ->label('Group')
+                    ->options(AgeGroup::class),
+                Tables\Filters\SelectFilter::make('gender')
+                    ->options(Gender::class),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->label('Add winner')
+                    ->modalHeading('Add winner'),
+                Tables\Actions\Action::make('allCertificates')
+                    ->label('All certificates (PDF)')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('success')
+                    ->visible(fn () => $this->getOwnerRecord()->participants()->exists())
+                    ->url(fn () => route('filament.admin.certificates.game', $this->getOwnerRecord()))
+                    ->openUrlInNewTab(),
             ])
             ->actions([
+                Tables\Actions\Action::make('certificate')
+                    ->label('Certificate')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('success')
+                    ->url(fn (GameParticipant $record) => route('filament.admin.certificates.winner', $record))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

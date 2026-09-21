@@ -55,13 +55,20 @@ class GameResource extends Resource
                 Tables\Columns\TextColumn::make('venue')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('participants_count')
-                    ->label('Participants')
+                    ->label('Winners')
                     ->counts('participants'),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('certificates')
+                    ->label('Certificates')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('success')
+                    ->visible(fn (Game $record) => $record->participants_count > 0)
+                    ->url(fn (Game $record) => route('filament.admin.certificates.game', $record))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

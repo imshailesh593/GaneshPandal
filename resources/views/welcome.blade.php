@@ -222,31 +222,41 @@
             @if ($winners->isEmpty())
                 <p class="mt-7 text-center text-maroon-900/60">प्रत्येक स्पर्धेनंतर विजेत्यांची नावं इथे जाहीर होतील.</p>
             @else
-                <div class="mt-7 space-y-4">
+                <div class="mt-7 space-y-5">
                     @foreach ($winners as $game)
-                        <div class="rounded-xl border-t-4 border-gold-300 bg-white p-4 shadow-sm">
-                            <p class="font-semibold text-maroon-950">{{ $game->name }} <span class="text-sm font-normal text-maroon-900/50">&middot; {{ $game->date->format('j M Y') }}</span></p>
-                            <ul class="mt-2 space-y-1 text-sm">
-                                @foreach ($game->participants as $participant)
-                                    <li class="flex items-center gap-2">
-                                        <span class="inline-flex w-24 shrink-0 items-center rounded-full px-2 py-0.5 text-xs font-medium
-                                            {{ match ($participant->position) {
-                                                'first' => 'bg-gold-200 text-vermillion-700',
-                                                'second' => 'bg-slate-200 text-slate-700',
-                                                'third' => 'bg-marigold-400/30 text-vermillion-700',
-                                                default => 'bg-emerald-700/10 text-emerald-700',
-                                            } }}">
-                                            {{ match ($participant->position) {
-                                                'first' => 'पहिला नंबर',
-                                                'second' => 'दुसरा नंबर',
-                                                'third' => 'तिसरा नंबर',
-                                                default => 'सहभागी',
-                                            } }}
-                                        </span>
-                                        <span class="text-maroon-900/80">{{ $participant->displayName() }}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
+                        <div class="rounded-xl border-t-4 border-gold-300 bg-white p-5 shadow-sm">
+                            <p class="font-display text-xl text-maroon-950">{{ $game->name }} <span class="font-sans text-sm text-maroon-900/50">&middot; {{ $game->date->format('j M Y') }}</span></p>
+
+                            @foreach (\App\Enums\AgeGroup::cases() as $group)
+                                @php $inGroup = $game->participants->where('age_group', $group); @endphp
+                                @continue($inGroup->isEmpty())
+
+                                <div class="mt-4">
+                                    <p class="text-sm font-semibold uppercase tracking-wide text-vermillion-600">{{ $group->marathi() }}</p>
+                                    <div class="mt-2 grid gap-3 sm:grid-cols-2">
+                                        @foreach (\App\Enums\Gender::cases() as $gender)
+                                            @php $ranked = $inGroup->where('gender', $gender); @endphp
+                                            @continue($ranked->isEmpty())
+
+                                            <div class="rounded-lg bg-ivory-50 p-3">
+                                                <p class="text-xs font-semibold uppercase tracking-wide text-maroon-900/50">{{ $group->genderLabel($gender) }}</p>
+                                                <ul class="mt-2 space-y-1.5 text-sm">
+                                                    @foreach ($ranked as $participant)
+                                                        <li class="flex items-center gap-2">
+                                                            <span class="inline-flex w-24 shrink-0 items-center justify-center rounded-full px-2 py-0.5 text-xs font-medium {{ match ($participant->position) {
+                                                                \App\Enums\Position::First => 'bg-gold-200 text-vermillion-700',
+                                                                \App\Enums\Position::Second => 'bg-slate-200 text-slate-700',
+                                                                \App\Enums\Position::Third => 'bg-marigold-400/30 text-vermillion-700',
+                                                            } }}">{{ $participant->position->casual() }} नंबर</span>
+                                                            <span class="text-maroon-900/80">{{ $participant->displayName() }}</span>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     @endforeach
                 </div>
