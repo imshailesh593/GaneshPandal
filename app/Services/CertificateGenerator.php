@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Festival;
 use App\Models\GameParticipant;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -64,8 +65,8 @@ class CertificateGenerator
         foreach ($winners as $winner) {
             $data = [
                 'winner' => $winner,
-                'year' => $winner->game->date->year,
-                'date' => $winner->game->date->locale('mr')->translatedFormat('j F Y'),
+                'year' => $winner->game->date?->year ?? Festival::active()?->year ?? $winner->game->created_at->year,
+                'date' => $winner->game->date?->locale('mr')->translatedFormat('j F Y'),
             ];
 
             $mpdf->AddPage();

@@ -32,7 +32,7 @@ class CertificateController extends Controller
 
         abort_if($winners->isEmpty(), 404, 'No winners have been entered for this event yet.');
 
-        return $this->pdf($generator->generate($winners), 'certificates-'.$game->date->format('Y-m-d').'-'.$game->id.'.pdf');
+        return $this->pdf($generator->generate($winners), 'certificates-'.$game->id.'.pdf');
     }
 
     private function pdf(string $content, string $filename)

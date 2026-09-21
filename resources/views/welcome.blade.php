@@ -100,7 +100,7 @@
     {{-- Schedule --}}
     <section id="schedule" class="bg-ivory-100 py-14">
         <div class="mx-auto max-w-4xl px-4">
-            <p class="text-center font-display text-sm uppercase tracking-widest text-vermillion-600">कधी, काय, कुठे</p>
+            <p class="text-center font-display text-sm uppercase tracking-widest text-vermillion-600">खेळ आणि स्पर्धा</p>
             <h2 class="font-display mt-2 text-center text-3xl text-maroon-950">उत्सव कार्यक्रम</h2>
 
             <div class="mt-7 rounded-xl border-t-4 border-gold-300 bg-white p-4 text-center shadow-sm">
@@ -110,35 +110,20 @@
                 </p>
             </div>
 
-            <div class="mt-6 overflow-x-auto">
+            <div class="mt-6">
                 @if ($games->isEmpty())
                     <p class="py-6 text-center text-maroon-900/60">खेळ आणि स्पर्धांचा कार्यक्रम लवकरच जाहीर होईल &mdash; थोडं थांबा!</p>
                 @else
-                    <table class="w-full min-w-[36rem] text-left text-sm">
-                        <thead>
-                            <tr class="border-b border-maroon-950/10 text-maroon-900/60">
-                                <th class="py-2 pr-4 font-medium">तारीख</th>
-                                <th class="py-2 pr-4 font-medium">वेळ</th>
-                                <th class="py-2 pr-4 font-medium">खेळ / स्पर्धा</th>
-                                <th class="py-2 pr-4 font-medium">ठिकाण</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($games as $game)
-                                <tr class="border-b border-maroon-950/5">
-                                    <td class="py-3 pr-4 whitespace-nowrap text-maroon-900/80">{{ $game->date->format('D, j M') }}</td>
-                                    <td class="py-3 pr-4 whitespace-nowrap text-maroon-900/80">{{ \Illuminate\Support\Carbon::parse($game->time)->format('g:i A') }}</td>
-                                    <td class="py-3 pr-4 font-medium text-maroon-950">
-                                        {{ $game->name }}
-                                        @if ($game->description)
-                                            <p class="text-xs font-normal text-maroon-900/60">{{ $game->description }}</p>
-                                        @endif
-                                    </td>
-                                    <td class="py-3 pr-4 text-maroon-900/80">{{ $game->venue ?? '—' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        @foreach ($games as $game)
+                            <div class="rounded-xl border-t-4 border-gold-300 bg-white p-4 shadow-sm">
+                                <p class="font-display text-lg text-maroon-950">{{ $game->name }}</p>
+                                @if ($game->date)
+                                    <p class="mt-1 text-sm text-maroon-900/60">{{ $game->date->format('D, j M Y') }}</p>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
                 @endif
             </div>
         </div>
@@ -225,7 +210,7 @@
                 <div class="mt-7 space-y-5">
                     @foreach ($winners as $game)
                         <div class="rounded-xl border-t-4 border-gold-300 bg-white p-5 shadow-sm">
-                            <p class="font-display text-xl text-maroon-950">{{ $game->name }} <span class="font-sans text-sm text-maroon-900/50">&middot; {{ $game->date->format('j M Y') }}</span></p>
+                            <p class="font-display text-xl text-maroon-950">{{ $game->name }} @if ($game->date)<span class="font-sans text-sm text-maroon-900/50">&middot; {{ $game->date->format('j M Y') }}</span>@endif</p>
 
                             @foreach (\App\Enums\AgeGroup::cases() as $group)
                                 @php $inGroup = $game->participants->where('age_group', $group); @endphp

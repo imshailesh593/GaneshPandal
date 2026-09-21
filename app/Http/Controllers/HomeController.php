@@ -13,7 +13,7 @@ class HomeController extends Controller
     {
         $festival = Festival::active();
 
-        $games = Game::query()->orderBy('date')->orderBy('time')->get();
+        $games = Game::query()->orderByRaw('date IS NULL')->orderBy('date')->orderBy('id')->get();
 
         $mahaprasadSlots = MahaprasadSlot::query()
             ->where('status', 'approved')
@@ -30,7 +30,7 @@ class HomeController extends Controller
                 ->orderByRaw("FIELD(age_group, 'small', 'medium', 'large')")
                 ->orderByRaw("FIELD(gender, 'male', 'female')")
                 ->orderByRaw("FIELD(position, 'first', 'second', 'third')")])
-            ->orderByDesc('date')
+            ->orderByDesc('id')
             ->get();
 
         return view('welcome', [

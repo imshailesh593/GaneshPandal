@@ -29,31 +29,21 @@ class GameResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\DatePicker::make('date')
-                    ->required(),
-                Forms\Components\TimePicker::make('time')
-                    ->required()
-                    ->seconds(false),
-                Forms\Components\TextInput::make('venue')
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
+                    ->helperText('Optional. Shown on the website and printed on certificates when set.'),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('date')
+            ->defaultSort('id', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('date')
                     ->date('D, j M Y')
+                    ->placeholder('—')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('time')
-                    ->time('g:i A'),
-                Tables\Columns\TextColumn::make('venue')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('participants_count')
                     ->label('Winners')
                     ->counts('participants'),
